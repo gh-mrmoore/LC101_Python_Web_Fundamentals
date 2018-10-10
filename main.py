@@ -54,11 +54,12 @@ crossoff_form = """
 # "Star Wars has been crossed off your watchlist".
 # And create a route above the function definition to receive and handle the request from 
 # your crossoff_form.
-def crossoff_movie("/strike", methods=['POST']):
+@app.route("/strike", methods=['POST'])
+def crossoff_movie():
     crossed_off_movie = request.form['crossed-off-movie']
 
-    stricken_movie_element = "<strike>" + crossed-off_movie + "</strike>"
-    sentence = new_movie_element + " has been added to your Watchlist!"
+    stricken_movie_element = "<strike>" + crossed_off_movie + "</strike>"
+    sentence = stricken_movie_element + " has been added to your Watchlist!"
     stricken_content = page_header + "<p>" + sentence + "</p>" + page_footer
 
     return stricken_content
