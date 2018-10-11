@@ -27,39 +27,51 @@ add_form = """
             <input type="text" id="new-movie" name="new-movie"/>
             to my watchlist.
         </label>
-        <input type="submit" value="Add It"/>
+        <input type="submit" value="Add It!"/>
     </form>
 """
 
 # TODO:
 # Create the HTML for the form below so the user can check off a movie from their list 
 # when they've watched it.
+    #DONE
 # Name the action for the form '/crossoff' and make its method 'post'.
+    #DONE
 
 # a form for crossing off watched movies
 crossoff_form = """
     <hr />
-    <form action="/strike" method="post">
-        <label for="crossed-off-movie">
+    <form action="/crossoff" method="post">
+        <!--<label for="crossed-off-movie">
             I want to remove
             <input type="text" id="crossed-off-movie" name="crossed-off-movie"/>
             from my watchlist.
-        </label>
-        <input type="submit" value="Add It"/>
+        </label>-->
+        <label for="remove-movie">Remove Movie:</label>
+        <select name="remove-movie" id="remove-movie">
+        	<option value="Transformers">Transformers</option>
+            <option value="TMNT">TMNT</option>
+            <option value="Superman">Superman</option>
+            <option value="Spaceballs">Spaceballs</option>
+            <option value="Ali">Ali</option>
+	    </select>
+        <input type="submit" value="Remove It!"/>
     </form>
 """
 
 # TODO:
 # Finish filling in the function below so that the user will see a message like:
 # "Star Wars has been crossed off your watchlist".
+    #DONE
 # And create a route above the function definition to receive and handle the request from 
 # your crossoff_form.
-@app.route("/strike", methods=['POST'])
+    #DONE
+@app.route("/crossoff", methods=['POST'])
 def crossoff_movie():
-    crossed_off_movie = request.form['crossed-off-movie']
+    crossed_off_movie = request.form['remove-movie']
 
     stricken_movie_element = "<strike>" + crossed_off_movie + "</strike>"
-    sentence = stricken_movie_element + " has been added to your Watchlist!"
+    sentence = stricken_movie_element + " has been crossed off your Watchlist!"
     stricken_content = page_header + "<p>" + sentence + "</p>" + page_footer
 
     return stricken_content
@@ -67,6 +79,7 @@ def crossoff_movie():
 # TODO:
 # modify the crossoff_form above to use a dropdown (<select>) instead of
 # an input text field (<input type="text"/>)
+    #DONE
 
 @app.route("/add", methods=['POST'])
 def add_movie():
