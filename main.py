@@ -61,9 +61,11 @@ terrible_movies = [
     "Star Wars Episode 1: Attack of the Clones",
     "Paul Blart: Mall Cop 2",
     "Nine Lives",
-    "Starship Troopers"
+    "Starship Troopers",
+    "Human Centipede",
+    "Battlefield Earth",
+    "Plan 9 From Outer Space"
 ]
-
 
 @app.route("/crossoff", methods=['POST'])
 def crossoff_movie():
@@ -87,16 +89,26 @@ def crossoff_movie():
 
 @app.route("/add", methods=['POST'])
 def add_movie():
-    new_movie = request.form['new-movie']
+    
 
     # TODO 
     # 'escape' the user's input so that if they typed HTML, it doesn't mess up our site
-    
+    new_movie = cgi.escape(request.form['new-movie'])
     # TODO 
     # if the user typed nothing at all, redirect and tell them the error
+    if len(new_movie) == 0:
+        error = 'No user input received.'
+        return redirect("/?error=" + error)
 
     # TODO 
     # if the user wants to add a terrible movie, redirect and tell them not to add it b/c it sucks
+    movie_iteration = 0
+    while movie_iteration <= len(terrible_movies):
+        if new_movie == terrible_movies[movie_iteration]:
+            error = "I'm sorry, you cannot add that movie."
+            return redirect("/?error=" + error)
+        else:
+            movie_iteration += 1
 
     # build response content
     new_movie_element = "<strong>" + new_movie + "</strong>"
