@@ -11,7 +11,7 @@
     </form>
 
     <hr />
-
+    <h2>All Tasks</h2>
     {% if tasks|length == 0 %}
     <p>No tasks yet</p>
     {% else %}
@@ -24,6 +24,21 @@
                 <input type="submit" value="Done!" />
             </form>
             </li>
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+
+    <hr />
+
+    <h2>Completed Tasks</h2>
+    {% if completed_tasks|length == 0 %}
+    <p>No completed tasks yet</p>
+    {% else %}
+
+        <ul>
+            {% for task in completed_tasks %}
+            <li>{{task.name}}</li>
             {% endfor %}
         </ul>
 
