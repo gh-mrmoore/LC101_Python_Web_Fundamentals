@@ -8,6 +8,8 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
 
+app.secret_key = 'jpfsop0495nfuianrgp019283iuern0n87unrnub098346ounb'
+
 class Task(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)   #every persistent class will need to have an id for database insertion
