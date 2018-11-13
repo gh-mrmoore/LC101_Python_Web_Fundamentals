@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session
+from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -15,9 +15,9 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)   #every persistent class will need to have an id for database insertion
     name = db.Column(db.String(120))   #creating column 'name' with 120 characters maximum
     completed = db.Column(db.Boolean)
-    #owner_id = db.Column(db.Integer, db.ForeignKey('user_id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, name):
+    def __init__(self, name, owner):
         self.name = name
         self.completed = False
         self.owner = owner
@@ -26,6 +26,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     useremail = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
+    tasks = db.relationship('Task', backref='owner')
 
     def __init__(self, useremail, password):
         self.useremail = useremail
@@ -43,12 +44,13 @@ def index():
 
     if request.method == 'POST':
         task_name = request.form['task']   #request.form.get will return "None" and allow better handling of any error... I need to try using this again...
-        new_task = Task(task_name)   #instantiation of the substantiated class, the parameters of the class must be passed thru in order to be valid
+        owner = User.query.filter_by(useremail=session['useremail']).first()
+        new_task = Task(task_name, owner)   #instantiation of the substantiated class, the parameters of the class must be passed thru in order to be valid
         db.session.add(new_task)
         db.session.commit()
     
-    tasks = Task.query.filter_by(completed=False).all()
-    completed_tasks = Task.query.filter_by(completed=True).all()
+    tasks = Task.query.filter_by(completed=False, owner=owner).all()
+    completed_tasks = Task.query.filter_by(completed=True, owner=owner).all()
 
     return render_template('todos.html', title="To Do List", tasks=tasks, completed_tasks=completed_tasks)
 
@@ -62,6 +64,7 @@ def login():
 
         if user and user.password == password:
             session['useremail'] = email
+            flash("Login Successful!", 'error')   #error class
             return redirect('/')
         else:
             return '<p>Error!</p>'
