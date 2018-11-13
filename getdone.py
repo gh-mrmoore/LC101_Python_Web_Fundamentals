@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from create_hash import make_hash, check_hash
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -25,12 +26,12 @@ class Task(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     useremail = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
+    pw_hash = db.Column(db.String(120))
     tasks = db.relationship('Task', backref='owner')
 
     def __init__(self, useremail, password):
         self.useremail = useremail
-        self.password = password
+        self.pw_hash = make_hash(password)
 
 @app.before_request
 def require_login():
@@ -41,10 +42,11 @@ def require_login():
 
 @app.route('/', methods=['POST', 'GET', 'PUT'])   #PUT method is used for updates from form data
 def index():
+    
+    owner = User.query.filter_by(useremail=session['useremail']).first()
 
     if request.method == 'POST':
         task_name = request.form['task']   #request.form.get will return "None" and allow better handling of any error... I need to try using this again...
-        owner = User.query.filter_by(useremail=session['useremail']).first()
         new_task = Task(task_name, owner)   #instantiation of the substantiated class, the parameters of the class must be passed thru in order to be valid
         db.session.add(new_task)
         db.session.commit()
@@ -62,7 +64,7 @@ def login():
 
         user = User.query.filter_by(useremail=email).first()
 
-        if user and user.password == password:
+        if user and check_hash(password, user.pw_hash):
             session['useremail'] = email
             flash("Login Successful!", 'error')   #error class
             return redirect('/')
