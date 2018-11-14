@@ -14,10 +14,12 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     watched = db.Column(db.Boolean)
+    rating = db.Column(db.String(120))
 
-    def __init__(self, name):
+    def __init__(self, name, rating):
         self.name = name
         self.watched = False
+        self.rating = rating
 
     def __repr__(self):
         return '<Movie %r>' % self.name
@@ -38,7 +40,8 @@ def get_current_watchlist():
 def get_watched_movies():
     # For now, we are just pretending
     # returns the list of movies the user has already watched and crossed off
-    return [ "The Matrix", "The Princess Bride", "Buffy the Vampire Slayer" ]
+    #return [ "The Matrix", "The Princess Bride", "Buffy the Vampire Slayer" ]
+    return Movie.query.filter_by(watched=1).all()
 
 
 # Create a new route called rate_movie which handles a POST request on /rating-confirmation
@@ -75,6 +78,8 @@ def crossoff_movie():
         return redirect("/?error=Attempt to watch a movie unknown to this database")
 
     # if we didn't redirect by now, then all is well
+    db.session.add(crossed_off_movie)
+    db.session.commit()
     return render_template('crossoff.html', crossed_off_movie=crossed_off_movie)
 
 
