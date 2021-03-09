@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>My Personal Home Page</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+	<!--<script src="hello_js.js"></script>-->
+	<!--Force Browser Refresh-->
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+</head>
+
+<body>
+	<header>My Personal Development Page</header>
+	
+	<nav class="row">
+        {% block content %}
+        {% endblock %}
+	</nav>
+
+	<main class="row">
+		<div class="column" id="main_column">
+			<p>This is a page where I can use Abyss web server and experiment with different things as I learn more about web development and enhance my skills.</p>
+
+
+		</div>
+		<div class="column" id="right_column">
+			<p>Sign up for a class!</p>
+		</div>
+	</main>
+
+	<footer>
+		&copy; 2018, Matthew R. Moore<br />
+		<a href="http://www.aprelium.com" target="_blank"><img src="../images/pwrabyss.gif" alt="Powered by Abyss Web Server" title="Powered by Abyss Web Server" border="0" width="88" height="31"></a>
+	</footer>
+</body>
+
+</html>
